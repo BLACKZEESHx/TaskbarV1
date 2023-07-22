@@ -1,3 +1,4 @@
+from showtray import MainWindow as traywindow
 import sys
 from Ui.borderTaskbar import Ui_MainWindow
 from PyQt5.QtCore import *
@@ -33,9 +34,10 @@ class MainWindow(QMainWindow):
         self.closer.activated.connect(self.close)
 
         self.trayteller = QShortcut("Ctrl+alt+T", self)
-        # self.trayteller.activated.connect(self.showtray)
+        self.trayteller.activated.connect(self.showtray)
         
-    # def showtray(self):
+    def showtray(self):
+        traywindow()
         
 
 if __name__ == "__main__":
