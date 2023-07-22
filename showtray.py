@@ -18,12 +18,12 @@ class MainWindow(QMainWindow):
             print(self.taskbar_rect)
             self.ui.setupUi(self)
             # self.setGeometry(535, 718, 300, 60)
-            self.setGeometry(width-200, self.taskbar_rect[1], 200, 60)
+            self.setGeometry(width-193, self.taskbar_rect[1]-10, 200, 60)
             self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
             self.setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
             self.setWindowFlag(Qt.WindowType.Tool, True)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-            self.setStyleSheet("*{\n"
+            self.ui.widget.setStyleSheet("*{\n"
 "    border-radius: 10px;\n"
 "    background-color: rgba(255, 255, 0, 0);\n"
 "     border: 4px solid rgb(255, 255, 255);\n"
