@@ -37,7 +37,8 @@ class MainWindow(QMainWindow):
         self.trayteller.activated.connect(self.showtray)
         
     def showtray(self):
-        traywindow()
+        traywindow().show()
+        
         
 
 if __name__ == "__main__":
