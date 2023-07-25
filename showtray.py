@@ -3,11 +3,13 @@ from PyQt5.QtCore import *
 import ctypes
 from PyQt5.QtGui import *
 import win32gui
-from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, QFrame
 from Ui.tray import Ui_MainWindow
 from pyautogui import size
 width = size().width
 height = size().height
+from Ui import title_bar_c
+
 
 class MainWindow(QMainWindow):
         def __init__(self):
@@ -20,11 +22,12 @@ class MainWindow(QMainWindow):
             print(self.taskbar_rect)
             self.ui.setupUi(self)
             # self.setGeometry(535, 718, 300, 60)
-            self.setGeometry(width-193, self.taskbar_rect[1]-10, 200, 60)
+            # self.setGeometry(width-193, self.taskbar_rect[1]-10, 200, 60)
             self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
-            self.setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
+            # self.setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
             self.setWindowFlag(Qt.WindowType.Tool, True)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+            self.ui.widget.mousePressEvent = self.MoveWindow
             self.timer = QTimer(self)
             self.timer.timeout.connect(self.timerbattime)
             self.timer.start(100)
@@ -34,6 +37,24 @@ class MainWindow(QMainWindow):
 "    border: 4px solid rgb(255, 255, 255);\n"
 "    color: white;\n"
 "}")
+            self.settings = QSettings("Pytaskbar", "Show_tray", self)
+            print(self.settings.fileName())
+
+            try:
+                 self.resize(self.settings.value("window size"))
+                 self.move(self.settings.value("window position"))
+            except:
+                 pass
+            
+        def MoveWindow(self, event):
+            if self.isMaximized() == False:
+                self.clickPosition = event.globalPos()
+                self.move(self.pos() + event.globalPos() - self.clickPosition)
+                event.accept()
+
+        def mousePressEvent(self, event):
+            self.clickPosition = event.globalPos()
+
         def timerbattime(self):
             class SYSTEM_POWER_STATUS(ctypes.Structure):
                 _fields_ = [
@@ -58,6 +79,10 @@ class MainWindow(QMainWindow):
             self.ui.pushButton_3.setText(str(battery_percent)+"%")
             current_time = dt.datetime.now().strftime('%H:%M')
             self.ui.pushButton.setText(str(current_time))
+            
+        def closeEvent(self, event):
+            self.settings.setValue("window size",self.size())
+            self.settings.setValue("window position",self.pos())
 
 
 if __name__ == "__main__":

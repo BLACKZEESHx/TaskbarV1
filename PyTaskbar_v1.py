@@ -39,8 +39,8 @@ class PyTaskbar(QMainWindow):
 
     def MoveWindow(self, event):
         if self.isMaximized() == False:
-            self.move(self.pos() + event.globalPos() - self.clickPosition)
             self.clickPosition = event.globalPos()
+            self.move(self.pos() + event.globalPos() - self.clickPosition)
             event.accept()
 
     def mousePressEvent(self, event):
